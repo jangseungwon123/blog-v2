@@ -24,6 +24,10 @@ public class BoardPersistRepositoryTest {
         // when
         List<Board> boardList = br.findAll();
 
+        // 게시글 한건 조회 말들기
+        //em.find(),JPQL, 네이트브 쿼리
+
+
         // then
         System.out.println("size 테스트 : " + boardList.size());
         System.out.println("첫번째 게시글 제목 확인 : " + boardList.get(0).getTitle());

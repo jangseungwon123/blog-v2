@@ -5,8 +5,10 @@ package com.tenco.blog.board;
 import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,6 +18,24 @@ import java.util.List;
 @Controller // IoC 대상 - 싱글톤 패턴으로 관리 됨
 public class BoardController {
     private final BoardPersistRepository br;
+
+
+    // 게시글 상세 보기
+    // 주소설계 GEt : http://localhost:8080/board/3
+
+    @GetMapping("/board/{id}")
+    public String detail(@PathVariable(name = "id") Long id , HttpServletRequest request) {
+
+        Board board = br.findById(id);
+        request.setAttribute("board", board);
+        // prefix: classpath:/templates
+        // return : board/detail
+        //suffix : .mustache
+        // 1차 캐시 효과 - DB에 접근하지 않고 바로 영속성 컨텍스트에서 꺼낸다.
+        // br.findById(id)
+        return "board/detail";
+    }
+
 
     //일정 화면 연결 처리
     // 1. index.mustache 파일을 반환 시키는 기능을 만든다.
