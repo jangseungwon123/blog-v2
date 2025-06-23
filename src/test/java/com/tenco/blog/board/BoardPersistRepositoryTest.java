@@ -1,6 +1,7 @@
 package com.tenco.blog.board;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,43 @@ public class BoardPersistRepositoryTest {
     private BoardPersistRepository br;
 
     @Test
+    public void deletById_Test() {
+        //given
+        Long id = 1L;
+
+        //when
+        // 삭제할 게시글이 실제로 존재하는지 확인
+        Board targetBoard = br.findById(id);
+        Assertions.assertThat(targetBoard).isNotNull();
+
+        // 영속성 컨텍스트에서 삭제 실행
+        br.deleteById(id);
+
+        //then
+        List<Board> afterDeleteBoardList = br.findAll();
+        Assertions.assertThat(afterDeleteBoardList.size()).isEqualTo(3);
+    }
+
+    //단위 게시글 한건 테스트 코드 작성
+    @Test
+    public void findById(){
+        //given
+        Long id = 1l;
+
+        //when
+        Board board = br.findById(id);
+
+        //than
+        Assertions.assertThat(board.getUsername()).isEqualTo("ssar");
+        Assertions.assertThat(board.getTitle()).isEqualTo("제목1");
+
+    }
+
+    @Test
     public void findAll_test() {
         // given
         // db/data.sql (4개의 더미 데이터)
+
 
         // when
         List<Board> boardList = br.findAll();
@@ -69,4 +104,16 @@ public class BoardPersistRepositoryTest {
 
     }
 
+    @Test
+    public void update_test() {
+        long id = 1L;
+        Board board = br.findById(id);
+
+        Assertions.assertThat(board.getTitle()).isEqualTo("제목1");
+
+        board.setTitle("안녕반가워");
+        br.update(board);
+
+        Assertions.assertThat(board.getTitle()).isEqualTo("안녕반가워");
+    }
 }
